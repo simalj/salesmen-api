@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SalesmanCollection extends ResourceCollection
 {
@@ -14,9 +15,16 @@ class SalesmanCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'data' => SalesmanResource::collection($this->collection),
         ];
+
+        // Add pagination info if resource is paginated
+        if ($this->resource instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            $data = array_merge($data, $this->with($request));
+        }
+
+        return $data;
     }
 
     /**
@@ -27,12 +35,23 @@ class SalesmanCollection extends ResourceCollection
     public function with(Request $request): array
     {
         if ($this->resource instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            /** @var LengthAwarePaginator<int, mixed> $paginator */
+            $paginator = $this->resource;
+            
             return [
                 'links' => [
                     'first' => $this->getFirstPageUrl(),
                     'last' => $this->getLastPageUrl(),
                     'prev' => $this->getPrevPageUrl(),
                     'next' => $this->getNextPageUrl(),
+                ],
+                'meta' => [
+                    'current_page' => $paginator->currentPage(),
+                    'from' => $paginator->firstItem(),
+                    'last_page' => $paginator->lastPage(),
+                    'per_page' => $paginator->perPage(),
+                    'to' => $paginator->lastItem(),
+                    'total' => $paginator->total(),
                 ],
             ];
         }
@@ -45,7 +64,10 @@ class SalesmanCollection extends ResourceCollection
      */
     private function getFirstPageUrl(): ?string
     {
-        if ($this->resource->currentPage() <= 1) {
+        /** @var LengthAwarePaginator<int, mixed> $paginator */
+        $paginator = $this->resource;
+        
+        if ($paginator->currentPage() <= 1) {
             return null;
         }
         
@@ -57,11 +79,14 @@ class SalesmanCollection extends ResourceCollection
      */
     private function getLastPageUrl(): ?string
     {
-        if ($this->resource->currentPage() >= $this->resource->lastPage()) {
+        /** @var LengthAwarePaginator<int, mixed> $paginator */
+        $paginator = $this->resource;
+        
+        if ($paginator->currentPage() >= $paginator->lastPage()) {
             return null;
         }
         
-        return $this->buildPageUrl($this->resource->lastPage());
+        return $this->buildPageUrl($paginator->lastPage());
     }
 
     /**
@@ -69,11 +94,14 @@ class SalesmanCollection extends ResourceCollection
      */
     private function getPrevPageUrl(): ?string
     {
-        if ($this->resource->currentPage() <= 1) {
+        /** @var LengthAwarePaginator<int, mixed> $paginator */
+        $paginator = $this->resource;
+        
+        if ($paginator->currentPage() <= 1) {
             return null;
         }
         
-        return $this->buildPageUrl($this->resource->currentPage() - 1);
+        return $this->buildPageUrl($paginator->currentPage() - 1);
     }
 
     /**
@@ -81,11 +109,14 @@ class SalesmanCollection extends ResourceCollection
      */
     private function getNextPageUrl(): ?string
     {
-        if ($this->resource->currentPage() >= $this->resource->lastPage()) {
+        /** @var LengthAwarePaginator<int, mixed> $paginator */
+        $paginator = $this->resource;
+        
+        if ($paginator->currentPage() >= $paginator->lastPage()) {
             return null;
         }
         
-        return $this->buildPageUrl($this->resource->currentPage() + 1);
+        return $this->buildPageUrl($paginator->currentPage() + 1);
     }
 
     /**

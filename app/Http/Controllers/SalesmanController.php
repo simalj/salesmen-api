@@ -24,7 +24,7 @@ class SalesmanController extends Controller
             $query = Salesman::query();
             
             // Sorting
-            $sort = $request->get('sort', 'created_at');
+            $sort = $request->string('sort', 'created_at');
             $direction = 'asc';
             
             if (str_starts_with($sort, '-')) {
@@ -39,7 +39,7 @@ class SalesmanController extends Controller
             }
             
             // Pagination
-            $perPage = min((int) $request->get('per_page', 10), 100); // Max 100 per page
+            $perPage = min($request->integer('per_page', 10), 100); // Max 100 per page
             $salesmen = $query->paginate($perPage);
             
             return response()->json(new SalesmanCollection($salesmen));
@@ -60,18 +60,20 @@ class SalesmanController extends Controller
     {
         try {
             // Check for existing prosight_id or email (custom validation)
-            $existingBySalesmanId = Salesman::where('prosight_id', $request->input('prosight_id'))->first();
+            $prosightId = $request->string('prosight_id');
+            $existingBySalesmanId = Salesman::where('prosight_id', $prosightId)->first();
             if ($existingBySalesmanId) {
                 return response()->json(
-                    ErrorResource::alreadyExists('prosight_id', $request->input('prosight_id')),
+                    ErrorResource::alreadyExists('prosight_id', $prosightId),
                     409
                 );
             }
 
-            $existingByEmail = Salesman::where('email', $request->input('email'))->first();
+            $email = $request->string('email');
+            $existingByEmail = Salesman::where('email', $email)->first();
             if ($existingByEmail) {
                 return response()->json(
-                    ErrorResource::alreadyExists('email', $request->input('email')),
+                    ErrorResource::alreadyExists('email', $email),
                     409
                 );
             }
@@ -117,24 +119,26 @@ class SalesmanController extends Controller
             
             // Check for existing prosight_id or email (excluding current record)
             if ($request->has('prosight_id')) {
-                $existingBySalesmanId = Salesman::where('prosight_id', $request->input('prosight_id'))
+                $prosightId = $request->string('prosight_id');
+                $existingBySalesmanId = Salesman::where('prosight_id', $prosightId)
                     ->where('id', '!=', $id)
                     ->first();
                 if ($existingBySalesmanId) {
                     return response()->json(
-                        ErrorResource::alreadyExists('prosight_id', $request->input('prosight_id')),
+                        ErrorResource::alreadyExists('prosight_id', $prosightId),
                         409
                     );
                 }
             }
 
             if ($request->has('email')) {
-                $existingByEmail = Salesman::where('email', $request->input('email'))
+                $email = $request->string('email');
+                $existingByEmail = Salesman::where('email', $email)
                     ->where('id', '!=', $id)
                     ->first();
                 if ($existingByEmail) {
                     return response()->json(
-                        ErrorResource::alreadyExists('email', $request->input('email')),
+                        ErrorResource::alreadyExists('email', $email),
                         409
                     );
                 }

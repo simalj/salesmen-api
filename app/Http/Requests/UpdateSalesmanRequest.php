@@ -22,7 +22,7 @@ class UpdateSalesmanRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, array<mixed>|string>
      */
     public function rules(): array
     {
@@ -63,6 +63,8 @@ class UpdateSalesmanRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -96,6 +98,8 @@ class UpdateSalesmanRequest extends FormRequest
 
     /**
      * Get the validated data from the request, mapped to database columns.
+     *
+     * @return array<string, mixed>
      */
     public function validatedForDatabase(): array
     {

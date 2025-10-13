@@ -1,0 +1,15 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 9
+    paths:
+        - app/
+        - routes/api.php
+    excludePaths:
+        - app/Http/Middleware/ (?)
+    ignoreErrors:
+        # Laravel specific issues that are safe to ignore
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::paginate\(\)#'
+        - '#Call to an undefined method Illuminate\\Database\\Query\\Builder::paginate\(\)#'
+    reportUnmatchedIgnoredErrors: false

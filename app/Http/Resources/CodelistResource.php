@@ -25,9 +25,12 @@ class CodelistResource extends JsonResource
 
     /**
      * Get genders codelist.
+     *
+     * @return array<int, array<string, string>>
      */
     private function getGenders(): array
     {
+        /** @var array<int, array<string, string>> */
         return \App\Models\Gender::all()->map(function ($gender) {
             return [
                 'code' => $gender->code,
@@ -38,26 +41,28 @@ class CodelistResource extends JsonResource
 
     /**
      * Get marital statuses codelist.
+     *
+     * @return array<int, array<string, string>>
      */
     private function getMaritalStatuses(): array
     {
+        /** @var array<int, array<string, string>> */
         return \App\Models\MaritalStatus::all()->map(function ($status) {
             return [
                 'code' => $status->code,
-                'name' => [
-                    'm' => $status->name_m,
-                    'f' => $status->name_f,
-                    'general' => $status->name_general,
-                ],
+                'name' => $status->name_general, // Používame general name pre codelist
             ];
         })->toArray();
     }
 
     /**
      * Get titles before codelist.
+     *
+     * @return array<int, array<string, string>>
      */
     private function getTitlesBefore(): array
     {
+        /** @var array<int, array<string, string>> */
         return \App\Models\TitleBefore::all()->map(function ($title) {
             return [
                 'code' => $title->code,
@@ -68,9 +73,12 @@ class CodelistResource extends JsonResource
 
     /**
      * Get titles after codelist.
+     *
+     * @return array<int, array<string, string>>
      */
     private function getTitlesAfter(): array
     {
+        /** @var array<int, array<string, string>> */
         return \App\Models\TitleAfter::all()->map(function ($title) {
             return [
                 'code' => $title->code,

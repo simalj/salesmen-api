@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Salesman extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -35,6 +36,8 @@ class Salesman extends Model
 
     /**
      * Get the gender for this salesman.
+     *
+     * @return BelongsTo<Gender, $this>
      */
     public function gender(): BelongsTo
     {
@@ -43,6 +46,8 @@ class Salesman extends Model
 
     /**
      * Get the marital status for this salesman.
+     *
+     * @return BelongsTo<MaritalStatus, $this>
      */
     public function maritalStatus(): BelongsTo
     {

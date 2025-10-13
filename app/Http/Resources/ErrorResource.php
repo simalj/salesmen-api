@@ -21,6 +21,8 @@ class ErrorResource extends JsonResource
 
     /**
      * Create a validation error response.
+     *
+     * @param array<string, array<string>> $errors
      */
     public static function validationError(array $errors): self
     {
