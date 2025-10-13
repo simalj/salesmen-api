@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CodelistController;
+use App\Http\Controllers\SalesmanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Salesmen CRUD API
-// POST /api/salesmen - create new salesman
-// GET /api/salesmen - list salesmen with pagination/sorting  
-// GET /api/salesmen/{uuid} - get single salesman
-// PUT /api/salesmen/{uuid} - update salesman
-// DELETE /api/salesmen/{uuid} - delete salesman
+Route::apiResource('salesmen', SalesmanController::class)->parameters([
+    'salesmen' => 'salesman' // URL parameter will be {salesman} instead of {salesmen}
+]);
 
 // Codelists API
-// GET /api/codelists - get all codelists for validation
-
-// TODO: Add routes when controllers are ready
+Route::get('codelists', [CodelistController::class, 'index']);
