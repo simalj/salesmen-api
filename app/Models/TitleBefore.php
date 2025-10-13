@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class TitleBefore extends Model
 {
     /**
+     * The table associated with the model.
+     */
+    protected $table = 'titles_before';
+
+    /**
      * The primary key for the model.
      */
     protected $primaryKey = 'code';

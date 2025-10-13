@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class TitleAfter extends Model
 {
     /**
+     * The table associated with the model.
+     */
+    protected $table = 'titles_after';
+
+    /**
      * The primary key for the model.
      */
     protected $primaryKey = 'code';
