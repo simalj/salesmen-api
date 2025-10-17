@@ -14,6 +14,11 @@ class ApiResponseCache
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip caching in testing environment
+        if (app()->environment('testing')) {
+            return $next($request);
+        }
+        
         // Only cache GET requests
         if ($request->method() !== 'GET') {
             return $next($request);

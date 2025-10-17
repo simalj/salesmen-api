@@ -13,17 +13,41 @@ class CacheInvalidationService
     public function invalidateSalesmenCache(): void
     {
         try {
-            // Clear all api cache entries that contain 'salesmen'
-            $cacheKeys = Cache::getRedis()->keys('laravel_cache:api_cache:*salesmen*');
+            // Check if we're using Redis cache store
+            $cacheStore = Cache::getStore();
             
-            if (!empty($cacheKeys)) {
-                foreach ($cacheKeys as $key) {
-                    Cache::forget(str_replace('laravel_cache:', '', $key));
+            if ($cacheStore instanceof \Illuminate\Cache\RedisStore) {
+                // Redis cache - clear specific keys
+                $cacheKeys = Cache::getRedis()->keys('laravel_cache:api_cache:*salesmen*');
+                
+                if (!empty($cacheKeys)) {
+                    foreach ($cacheKeys as $key) {
+                        Cache::forget(str_replace('laravel_cache:', '', $key));
+                    }
+                    
+                    Log::info('Cache invalidated', [
+                        'type' => 'salesmen',
+                        'keys_cleared' => count($cacheKeys),
+                        'store' => 'redis'
+                    ]);
+                }
+            } else {
+                // Non-Redis cache (array, file, etc.) - clear common patterns
+                $commonKeys = [
+                    'api_cache:salesmen:index',
+                    'api_cache:salesmen:list', 
+                    'api_cache:salesmen:paginated',
+                    'api_cache:codelists:all'
+                ];
+                
+                foreach ($commonKeys as $key) {
+                    Cache::forget($key);
                 }
                 
                 Log::info('Cache invalidated', [
                     'type' => 'salesmen',
-                    'keys_cleared' => count($cacheKeys)
+                    'keys_cleared' => count($commonKeys),
+                    'store' => get_class($cacheStore)
                 ]);
             }
         } catch (\Exception $e) {

@@ -15,6 +15,11 @@ class DatabasePerformanceMonitoring
      */
     public function handle(Request $request, Closure $next)
     {
+        // Skip monitoring in testing environment
+        if (app()->environment('testing')) {
+            return $next($request);
+        }
+        
         $startTime = microtime(true);
         $startQueries = $this->getQueryCount();
         

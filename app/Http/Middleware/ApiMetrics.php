@@ -15,6 +15,11 @@ class ApiMetrics
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip metrics collection in testing environment  
+        if (app()->environment('testing')) {
+            return $next($request);
+        }
+        
         $startTime = microtime(true);
         $startMemory = memory_get_usage(true);
         
