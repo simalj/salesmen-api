@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - APP_ENV=development
+      - APP_DEBUG=true
+      - DB_HOST=postgres
+      - DB_DATABASE=salesmen_api
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./tests:/var/www/html/tests
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: salesmen_api
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d salesmen_api"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data_dev:

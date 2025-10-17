@@ -65,6 +65,34 @@ return [
             'replace_placeholders' => true,
         ],
 
+                'salesmen' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/salesmen.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+        ],
+
+                'api-metrics' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/api-metrics.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
+        'db-performance' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/db-performance.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
+
+        'api' => [
+            'driver' => 'single', 
+            'path' => storage_path('logs/api.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

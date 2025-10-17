@@ -1,0 +1,45 @@
+version: '3.8'
+
+# Production overrides for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+services:
+  app:
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=https://your-domain.com
+      - LOG_LEVEL=error
+      # Add your production database credentials
+      - DB_HOST=your-prod-db-host
+      - DB_DATABASE=salesmen_api_prod
+      - DB_USERNAME=your-prod-username
+      - DB_PASSWORD=your-secure-password
+    restart: always
+    # Production resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  postgres:
+    environment:
+      # Use secure production credentials
+      POSTGRES_DB: salesmen_api_prod
+      POSTGRES_USER: your-prod-username
+      POSTGRES_PASSWORD: your-secure-password
+    restart: always
+    # Persistent volume for production data
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+    # Production resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+# Remove the volumes section to use persistent host volumes

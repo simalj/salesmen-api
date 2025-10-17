@@ -364,4 +364,43 @@ class SalesmanApiTest extends TestCase
                 ]
             ]);
     }
+
+    /** @test */
+    public function test_health_check_endpoint()
+    {
+        // Act
+        $response = $this->getJson('/api/health');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'status',
+                'timestamp',
+                'version',
+                'checks' => [
+                    'database',
+                    'cache',
+                    'codelists'
+                ],
+                'uptime'
+            ])
+            ->assertJson([
+                'status' => 'healthy',
+                'version' => 'v1.0.0'
+            ]);
+    }
+
+    /** @test */
+    public function test_api_versioning_v1_endpoints()
+    {
+        // Arrange
+        Salesman::factory()->create();
+
+        // Act - Test v1 explicitly
+        $response = $this->getJson('/api/v1/salesmen');
+
+        // Assert
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data', 'links', 'meta']);
+    }
 }

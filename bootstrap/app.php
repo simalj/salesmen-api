@@ -12,7 +12,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Global middleware
+        $middleware->append([
+            \App\Http\Middleware\ApiMetrics::class,
+            \App\Http\Middleware\DatabasePerformanceMonitoring::class,
+        ]);
+        
+        // API middleware group
+        $middleware->group('api', [
+            \App\Http\Middleware\ApiVersioning::class,
+            \App\Http\Middleware\ApiResponseCache::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

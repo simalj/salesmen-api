@@ -1,10 +1,22 @@
-version: "3.8"
-
 services:
+  app:
+    build: .
+    ports:
+      - "8000:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST=postgres
+      - DB_DATABASE=salesmen_api
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+    volumes:
+      - ./storage:/var/www/html/storage
+    restart: unless-stopped
+
   postgres:
     image: postgres:16
-    container_name: salesmen_postgres
-    restart: always
     environment:
       POSTGRES_DB: salesmen_api
       POSTGRES_USER: postgres
@@ -14,10 +26,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d salesmen_api"]
+      interval: 5s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
 volumes:
   postgres_data:

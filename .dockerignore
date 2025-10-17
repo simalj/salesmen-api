@@ -1,0 +1,46 @@
+# Laravel specific
+.env*
+!.env.docker
+.env.example
+
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation (not needed in container)
+*.md
+docs/
+
+# Testing (not needed in production)
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# Development tools
+docker-compose.dev.yml
+Dockerfile.dev
+
+# Storage (created at runtime)
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+
+# Composer cache
+vendor/cache/
