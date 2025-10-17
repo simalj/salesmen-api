@@ -35,7 +35,6 @@ jobs:
     - name: Configure Environment for Testing
       run: |
         echo "APP_ENV=testing" >> .env
-        echo "APP_KEY=" >> .env
         echo "DB_CONNECTION=sqlite" >> .env
         echo "DB_DATABASE=:memory:" >> .env
         echo "CACHE_DRIVER=array" >> .env
